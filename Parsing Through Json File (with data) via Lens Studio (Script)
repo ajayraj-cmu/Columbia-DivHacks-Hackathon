@@ -1,0 +1,82 @@
+Snap AR JS Code for 3-D Mapping: // @input Asset.TextAsset jsonFile
+// @input SceneObject globalSphere
+// @input Asset.Material markerMaterial // Material for the earthquake markers
+
+// Radius of the sphere (assuming it's a unit sphere, you can adjust this)
+var sphereRadius = 1;
+
+// Create an event to trigger when the lens turns on
+script.createEvent("TurnOnEvent").bind(function() {
+    // Fetch the text from the JSON file
+    var jsonData = script.newEarthQuakeData.text;  // Fixed reference to 'jsonFile'
+
+    // Parse the JSON data
+    try {
+        var parsedData = JSON.parse(jsonData);
+        print("Parsed JSON data: " + JSON.stringify(parsedData));
+
+        // Loop through all earthquake disasters in the JSON
+        var earthquakes = parsedData["earthquakeDisasters"];
+        for (var i = 0; i < earthquakes.length; i++) {
+            var earthquake = earthquakes[i];
+
+            // Extract the name, magnitude, latitude, and longitude
+            var earthquakeName = earthquake["name"];
+            var earthquakeMagnitude = earthquake["magnitude"];
+            var earthquakeLatitude = earthquake["location"]["latitude"];
+            var earthquakeLongitude = earthquake["location"]["longitude"];
+
+            // Log the extracted data for each earthquake
+            print("Earthquake " + (i + 1) + " - Name: " + earthquakeName);
+            print("Magnitude: " + earthquakeMagnitude);
+            print("Location: " + earthquakeLatitude + ", " + earthquakeLongitude);
+
+            // Convert latitude and longitude to 3D coordinates on the sphere
+            var earthquakePosition = convertLatLonTo3D(earthquakeLatitude, earthquakeLongitude, sphereRadius);
+
+            // Create a new marker for the earthquake
+            var marker = createEarthquakeMarker(earthquakePosition, earthquakeMagnitude);
+
+            // Attach the marker to the global sphere so it moves with the sphere
+            marker.setParent(script.globalSphere);
+        }
+
+    } catch (e) {
+        print("Error parsing JSON: " + e);
+    }
+});
+
+// Function to convert latitude and longitude to 3D coordinates on the sphere
+function convertLatLonTo3D(lat, lon, radius) {
+    // Convert latitude and longitude from degrees to radians
+    var latRad = lat * (Math.PI / 180);
+    var lonRad = lon * (Math.PI / 180);
+
+    // Spherical to Cartesian conversion
+    var x = radius * Math.cos(latRad) * Math.cos(lonRad);
+    var y = radius * Math.sin(latRad);
+    var z = radius * Math.cos(latRad) * Math.sin(lonRad);
+
+    return new vec3(x, y, z);
+}
+
+// Function to create a new marker for each earthquake
+function createEarthquakeMarker(position, magnitude) {
+    // Create a new scene object for the marker
+    var markerObject = scene.createSceneObject("Earthquake Marker");
+
+    // Add a mesh component to create a 3D sphere marker
+    var sphereMesh = markerObject.createComponent("Component.MeshVisual");
+
+    // Fix: Use the correct mesh, not texture
+    sphereMesh.mesh = script.markerMaterial.mainPass.mesh;
+
+    // Set the scale of the marker based on earthquake magnitude (larger magnitude, larger marker)
+    var scaleFactor = Math.max(0.1, magnitude / 10); // Scale based on magnitude, but with a minimum size
+    markerObject.getTransform().setLocalScale(new vec3(scaleFactor, scaleFactor, scaleFactor));
+
+    // Set the position of the marker on the global sphere
+    markerObject.getTransform().setLocalPosition(position);
+
+    return markerObject;
+}
