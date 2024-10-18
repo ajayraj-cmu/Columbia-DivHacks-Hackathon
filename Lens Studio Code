@@ -88,3 +88,88 @@ Assets/**/*.worldSettings !filter !diff !merge text linguist-language=yaml merge
 Assets/**/*.worldUnderstandingModule !filter !diff !merge text linguist-language=yaml merge=lens-studio-yaml-merge
 Assets/**/*.worldmesh !filter !diff !merge text linguist-language=yaml merge=lens-studio-yaml-merge
 # Shipped by Lens Studio
+
+
+#jsonConfig.
+{
+    "compilerOptions": {
+        "target": "ES2019",
+        "module": "commonjs",
+        "lib": [
+            "ES2019"
+        ],
+        "baseUrl": "Assets/",
+        "paths": {
+            "*": [
+                "*",
+                "Modules/*"
+            ]
+        }
+    },
+    "include": [
+        "**/*.js",
+        "**/*.d.ts"
+    ]
+}
+
+#Map Visualization: 
+studioVersion:
+  major: 5
+  minor: 1
+  patch: 1
+  build: 24092500
+updateCheckpoint: 48
+sceneId: 0a1ccb1a-fe88-4fbb-9883-e3af3c75fd99
+viewConfig:
+  simulation:
+    device: Spectacles (2024)
+    cameraFov: nan
+    fullFrameAspect: 0.666660
+    viewport: Normal
+    output: Live
+    stereoOutputEye: Center
+    deviceTypeOverride: Unknown
+  cameraType: Front
+metaInfo:
+  hints:
+    []
+  tags:
+    []
+  lensName: globe_button
+  lensDescriptors:
+    []
+  lensApplicability:
+    - Front
+    - Back
+  lensClientCompatibilities:
+    - Spectacles
+  iconHash: ""
+  videoPreviewHash: ""
+  fromTemplateName: Spectacles
+  fromTemplateUrl: Lens Studio 5.1.1.24092500
+  activationCamera: Front
+  sourceMapEnabled: false
+
+#
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2019",
+    "isolatedModules": true,
+    "noEmit": true,
+    "skipDefaultLibCheck": true,
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "lib": ["es2019"],
+    "types": [],
+    "baseUrl": "./Assets"
+  },
+  "exclude": [
+    "node_modules/typescript/lib/lib.dom.d.ts"
+  ],
+  "include": [
+    "./Cache/TypeScript/lib/LensifyTS/Declarations/**/*.d.ts",
+    "Assets/**/*.ts"
+  ]
+}
+
